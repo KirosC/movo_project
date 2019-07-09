@@ -22,7 +22,7 @@
 
     <!-- Bring up the demo -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="18 movo_gazebo init_sim_inplace.xml"
+        args="18 movo_project init_sim_inplace.xml"
         name="init_sim_bringup" output="screen"/>
 
     <!-- Bring up the demo -->
