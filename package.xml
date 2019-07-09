@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>movo_project</name>
+  <version>0.0.0</version>
+  <description>The movo_project package</description>
+  <maintainer email="Fun_GKC@hotmail.com">Kiros Choi</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>
+  <build_export_depend>roslaunch</build_export_depend>
+  <exec_depend>roslaunch</exec_depend>
+
+
+  <export>
+  </export>
+</package>
