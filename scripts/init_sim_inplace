@@ -143,19 +143,19 @@ if __name__ == "__main__":
     smp.call(tmp)
     rospy.sleep(3)
 
-    f = open(rospack.get_path("movo_gazebo")+'/models/cafe_beer/model.sdf','r')
-    sdff = f.read()
-    f.close()
-
-    tmp = SpawnModelRequest()
-    tmp.model_name='cafe_beer'
-    tmp.model_xml = sdff
-    tmp.robot_namespace=''
-    tmp.reference_frame="world"
-    tmp.initial_pose.position.x = random.uniform(1.75,1.8)
-    tmp.initial_pose.position.y = random.uniform(0.1,0.15)
-    tmp.initial_pose.position.z = 0.8
-    smp.call(tmp)
+    # f = open(rospack.get_path("movo_gazebo")+'/models/cafe_beer/model.sdf','r')
+    # sdff = f.read()
+    # f.close()
+    #
+    # tmp = SpawnModelRequest()
+    # tmp.model_name='cafe_beer'
+    # tmp.model_xml = sdff
+    # tmp.robot_namespace=''
+    # tmp.reference_frame="world"
+    # tmp.initial_pose.position.x = random.uniform(1.75,1.8)
+    # tmp.initial_pose.position.y = random.uniform(0.1,0.15)
+    # tmp.initial_pose.position.z = 0.8
+    # smp.call(tmp)
 
     f = open(rospack.get_path("movo_gazebo")+'/models/pringles/model.sdf','r')
     sdff = f.read()
@@ -166,8 +166,10 @@ if __name__ == "__main__":
     tmp.model_xml = sdff
     tmp.robot_namespace=''
     tmp.reference_frame="world"
-    tmp.initial_pose.position.x = random.uniform(1.75,1.8)
-    tmp.initial_pose.position.y = random.uniform(-0.1,-0.15)
+    # tmp.initial_pose.position.x = random.uniform(1.75,1.8)
+    # tmp.initial_pose.position.y = random.uniform(-0.1,-0.15)
+    tmp.initial_pose.position.x = 1.8
+    tmp.initial_pose.position.y = 0.15
     tmp.initial_pose.position.z = 0.8
     smp.call(tmp)
     rospy.sleep(1)
