@@ -95,42 +95,7 @@ class GraspingClient(object):
         self.lmove_group.setPlannerId("RRTConnectkConfigDefault")
         self.rmove_group.setPlannerId("RRTConnectkConfigDefault")
 
-        if "6dof" == self.dof:
-            self._upper_body_joints = ["right_elbow_joint",
-                                       "right_shoulder_lift_joint",
-                                       "right_shoulder_pan_joint",
-                                       "right_wrist_1_joint",
-                                       "right_wrist_2_joint",
-                                       "right_wrist_3_joint",
-                                       "left_elbow_joint",
-                                       "left_shoulder_lift_joint",
-                                       "left_shoulder_pan_joint",
-                                       "left_wrist_1_joint",
-                                       "left_wrist_2_joint",
-                                       "left_wrist_3_joint",
-                                       "linear_joint",
-                                       "pan_joint",
-                                       "tilt_joint"]
-            self._right_arm_joints = ["right_elbow_joint",
-                                      "right_shoulder_lift_joint",
-                                      "right_shoulder_pan_joint",
-                                      "right_wrist_1_joint",
-                                      "right_wrist_2_joint",
-                                      "right_wrist_3_joint"]
-            self._left_arm_joints = ["left_elbow_joint",
-                                     "left_shoulder_lift_joint",
-                                     "left_shoulder_pan_joint",
-                                     "left_wrist_1_joint",
-                                     "left_wrist_2_joint",
-                                     "left_wrist_3_joint"]
-            self.tucked = [-2.8, -1.48, -1.48, 0, 0, 1.571, 2.8, 1.48, 1.48, 0, 0, -1.571, 0.0371, 0.0, 0.0]
-            self.constrained_stow = [2.28, 2.17, -2.56, -0.09, 0.15, 1.082, -2.28, -2.17, 2.56, 0.09, -0.15, 2.06, 0.42,
-                                     0.0, 0.0]
-            self.larm_const_stow = [-2.28, -2.17, 2.56, 0.09, -0.15, 2.08]
-            self.rarm_const_stow = [2.28, 2.17, -2.56, -0.09, 0.15, 1.06]
-            self.tableDist = 0.7
-
-        elif "7dof" == self.dof:
+        if "7dof" == self.dof:
             self._upper_body_joints = ["right_shoulder_pan_joint",
                                        "right_shoulder_lift_joint",
                                        "right_arm_half_joint",
@@ -171,7 +136,7 @@ class GraspingClient(object):
             self.tableDist = 0.8
 
         else:
-            rospy.logerr("DoF needs to be set 6 or 7, aborting demo")
+            rospy.logerr("DoF needs to be set 7, aborting demo")
             return
 
         self.pickplace = [None] * 2
