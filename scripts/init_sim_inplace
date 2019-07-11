@@ -162,7 +162,7 @@ if __name__ == "__main__":
     f.close()
 
     tmp = SpawnModelRequest()
-    tmp.model_name='pringles'
+    tmp.model_name='pringles-one'
     tmp.model_xml = sdff
     tmp.robot_namespace=''
     tmp.reference_frame="world"
@@ -170,6 +170,13 @@ if __name__ == "__main__":
     # tmp.initial_pose.position.y = random.uniform(-0.1,-0.15)
     tmp.initial_pose.position.x = 1.8
     tmp.initial_pose.position.y = 0.15
+    tmp.initial_pose.position.z = 0.8
+    smp.call(tmp)
+    rospy.sleep(1)
+
+    tmp.model_name = 'pringles-two'
+    tmp.initial_pose.position.x = 1.8
+    tmp.initial_pose.position.y = -0.15
     tmp.initial_pose.position.z = 0.8
     smp.call(tmp)
     rospy.sleep(1)

@@ -244,10 +244,14 @@ class GraspingClient(object):
         self.objects = find_result.objects
         self.surfaces = find_result.support_surfaces
 
-    def getGraspablePringles(self, planned=True):
+    def getGraspablePringles(self, planned=True, place=False):
         for obj in self.objects:
             # need grasps
             if len(obj.grasps) < 1 and planned:
+                continue
+
+            # Skip pringles on the right
+            if obj.object.primitive_poses[0].position.y < 0 and not place:
                 continue
 
             # has to be on table
@@ -291,16 +295,16 @@ class GraspingClient(object):
         self._last_gripper_picked = gripper
         return success
 
-    def place(self, block, pose_stamped, gripper=0):
+    def place(self, block, pose_stamped, gripper=0, grasps=None):
         places = list()
         l = PlaceLocation()
         l.place_pose.pose = pose_stamped.pose
         l.place_pose.header.frame_id = pose_stamped.header.frame_id
 
         # copy the posture, approach and retreat from the grasp used
-        l.post_place_posture = self.pick_result[gripper].grasp.pre_grasp_posture
-        l.pre_place_approach = self.pick_result[gripper].grasp.pre_grasp_approach
-        l.post_place_retreat = self.pick_result[gripper].grasp.post_grasp_retreat
+        l.post_place_posture = grasps.pre_grasp_posture
+        l.pre_place_approach = grasps.pre_grasp_approach
+        l.post_place_retreat = grasps.post_grasp_retreat
         places.append(copy.deepcopy(l))
         # create another several places, rotate each by 360/m degrees in yaw direction
         m = 16  # number of possible place poses
@@ -444,12 +448,28 @@ if __name__ == "__main__":
 
     # Place the block
     while not rospy.is_shutdown():
+        rospy.loginfo("Scanning another pringles...")
+
+        # Scanning for the pringles on the table
+        grasping_client.updateScene(0)
+        pringlesRight, graspsRight = grasping_client.getGraspablePringles(place=True)
+        if pringlesRight == None:
+            rospy.logwarn("Perception failed.")
+            continue
+
         rospy.loginfo("Placing object...")
         pose = PoseStamped()
-        pose.pose = pringles.primitive_poses[0]
-        pose.pose.position.z += 0.01
-        pose.header.frame_id = pringles.header.frame_id
-        if grasping_client.place(pringles, pose, gripper=0):
+        pose.pose = pringlesRight.primitive_poses[0]
+        # Place above another pringles, pringles height approx. = 0.27
+        pose.pose.position.z += 0.3
+        pose.header.frame_id = pringlesRight.header.frame_id
+
+        bestGrasp = graspsRight[0]
+        for grasp in graspsRight:
+            if grasp.grasp_quality > bestGrasp:
+                bestGrasp = grasp
+
+        if grasping_client.place(pringles, pose, gripper=0, grasps=bestGrasp):
             break
         rospy.logwarn("Placing failed.")
 
