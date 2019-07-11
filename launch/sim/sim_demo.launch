@@ -30,9 +30,4 @@
         args="35 movo_project demo.launch sim:=true local:=true"
         name="demo_bringup" output="screen"/>
 
-    <!-- Bring up the demo -->
-    <node pkg="si_utils" type="timed_roslaunch"
-        args="40 movo_viz view_robot.launch function:=demo"
-        name="viz_bringup" output="screen"/>
-
 </launch>

@@ -37,7 +37,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import copy
 import actionlib
 import rospy
-import sys
 import tf
 
 from moveit_msgs.msg import Constraints, OrientationConstraint
@@ -49,7 +48,6 @@ from moveit_python.geometry import rotate_pose_msg_by_euler_angles
 
 from movo_action_clients.gripper_action_client import GripperActionClient
 from movo_action_clients.move_base_action_client import MoveBaseActionClient
-from movo_action_clients.torso_action_client import TorsoActionClient
 
 from control_msgs.msg import PointHeadAction, PointHeadGoal
 from grasp_msgs.msg import FindGraspableObjectsAction, FindGraspableObjectsGoal
@@ -183,13 +181,12 @@ class GraspingClient(object):
         pringles, grasps = self.getGraspablePringles(False)
         if None == pringles:
             return None
-        center_objects = pringles.primitive_poses[0].position.y
 
-        # surface = self.getSupportSurface(beer.support_surface)
-        # tmp1 = surface.primitive_poses[0].position.x - surface.primitives[0].dimensions[0] / 2
         surface = self.getSupportSurface(pringles.support_surface)
-        tmp2 = surface.primitive_poses[0].position.x - surface.primitives[0].dimensions[0] / 2
-        front_edge = tmp2 - 0.1
+
+        # Getting the coordinate of the front edge of the object
+        center_objects = pringles.primitive_poses[0].position.y
+        front_edge = surface.primitive_poses[0].position.x - surface.primitives[0].dimensions[0] / 2
 
         # Coordinate for grasping
         coords = Pose2D(x=(front_edge - self.tableDist), y=center_objects, theta=0.0)
@@ -245,27 +242,43 @@ class GraspingClient(object):
         self.surfaces = find_result.support_surfaces
 
     def getGraspablePringles(self, planned=True):
-        for obj in self.objects:
+        rospy.logwarn('Detected Obj: {}'.format(len(self.objects)))
+        rospy.logwarn('=====================')
+        for idx, obj in enumerate(self.objects):
             # need grasps
             if len(obj.grasps) < 1 and planned:
+                rospy.logwarn('Ungraspable')
+                rospy.logwarn('========= {} ========='.format(idx))
                 continue
 
             # has to be on table
             if obj.object.primitive_poses[0].position.z < 0.5 or \
                     obj.object.primitive_poses[0].position.z > 1.0 or \
                     obj.object.primitive_poses[0].position.x > 2.0:
+                rospy.logwarn('Not on table')
+                rospy.logwarn('========= {} ========='.format(idx))
                 continue
-            elif (obj.object.primitives[0].type == sp.CYLINDER):
-                if obj.object.primitives[0].dimensions[sp.CYLINDER_HEIGHT] < 0.21 or \
+            elif obj.object.primitives[0].type == sp.CYLINDER:
+                rospy.logwarn('Cylinder')
+                if obj.object.primitives[0].dimensions[sp.CYLINDER_HEIGHT] < 0.18 or \
                         obj.object.primitives[0].dimensions[sp.CYLINDER_HEIGHT] > 0.28:
+                    rospy.logwarn('Size not matched')
+                    rospy.logwarn('========= {} ========='.format(idx))
                     continue
-            elif (obj.object.primitives[0].type == sp.BOX):
-                if obj.object.primitives[0].dimensions[sp.BOX_Z] < 0.21 or \
+            elif obj.object.primitives[0].type == sp.BOX:
+                rospy.logwarn('Box')
+                if obj.object.primitives[0].dimensions[sp.BOX_Z] < 0.18 or \
                         obj.object.primitives[0].dimensions[sp.BOX_Z] > 0.28:
+                    rospy.logwarn('Size not matched')
+                    rospy.logwarn('========= {} ========='.format(idx))
                     continue
             else:
+                rospy.logwarn('Unknown shape')
+                rospy.logwarn('========= {} ========='.format(idx))
                 continue
 
+            rospy.logwarn('Pringles found')
+            rospy.logwarn('========= {} ========='.format(idx))
             return obj.object, obj.grasps
         # nothing detected
         return None, None
@@ -293,21 +306,21 @@ class GraspingClient(object):
 
     def place(self, block, pose_stamped, gripper=0):
         places = list()
-        l = PlaceLocation()
-        l.place_pose.pose = pose_stamped.pose
-        l.place_pose.header.frame_id = pose_stamped.header.frame_id
+        loc = PlaceLocation()
+        loc.place_pose.pose = pose_stamped.pose
+        loc.place_pose.header.frame_id = pose_stamped.header.frame_id
 
         # copy the posture, approach and retreat from the grasp used
-        l.post_place_posture = self.pick_result[gripper].grasp.pre_grasp_posture
-        l.pre_place_approach = self.pick_result[gripper].grasp.pre_grasp_approach
-        l.post_place_retreat = self.pick_result[gripper].grasp.post_grasp_retreat
-        places.append(copy.deepcopy(l))
+        loc.post_place_posture = self.pick_result[gripper].grasp.pre_grasp_posture
+        loc.pre_place_approach = self.pick_result[gripper].grasp.pre_grasp_approach
+        loc.post_place_retreat = self.pick_result[gripper].grasp.post_grasp_retreat
+        places.append(copy.deepcopy(loc))
         # create another several places, rotate each by 360/m degrees in yaw direction
         m = 16  # number of possible place poses
         pi = 3.141592653589
         for i in range(0, m - 1):
-            l.place_pose.pose = rotate_pose_msg_by_euler_angles(l.place_pose.pose, 0, 0, 2 * pi / m)
-            places.append(copy.deepcopy(l))
+            loc.place_pose.pose = rotate_pose_msg_by_euler_angles(loc.place_pose.pose, 0, 0, 2 * pi / m)
+            places.append(copy.deepcopy(loc))
 
         success, place_result = self.pickplace[gripper].place_with_retry(block.name,
                                                                          places,
@@ -388,11 +401,11 @@ if __name__ == "__main__":
     """
     Get all the demo locations from the parameter file defined by the user
     """
-    table_height = rospy.get_param("~table_height", 0.74)
+    table_height = rospy.get_param("~table_height", 0.75)
 
     is_sim = rospy.get_param("~sim", False)
 
-    if (is_sim):
+    if is_sim:
         rospy.wait_for_message('/sim_initialized', Bool)
 
     # Setup clients
@@ -407,16 +420,18 @@ if __name__ == "__main__":
     grasping_client.goto_plan_grasp()
     grasping_client.open_gripper()
 
-    head_action.look_at(1.8, 0, table_height + .1, "base_link")
+    # 1.2 is the straight distance between the robot and object
+    head_action.look_at(1.2, 0, table_height + .1, "base_link")
 
     while not rospy.is_shutdown():
         coords = grasping_client.getPickCoordinates()
-        if coords == None:
+        if coords is None:
             rospy.logwarn("Perception failed.")
             continue
         break
 
     rospy.loginfo("Moving to table...")
+    rospy.logwarn('Coords: \n{}'.format(coords))
     move_base.goto(coords)
 
     # Point the head at the stuff we want to pick

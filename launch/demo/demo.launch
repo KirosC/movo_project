@@ -26,16 +26,26 @@
 
     <node if="$(optenv MOVO_HAS_KINOVA_ARM_6DOF false)" name="demo" pkg="movo_project" type="inplace_pick_place_demo.py" output="screen">
     	<rosparam command="load" file="$(find movo_moveit_config)/config/kinematics.yaml"/>
-    	<param name="table_height" value="0.74"/>
+    	<param name="table_height" value="0.75"/>
 		<param name="sim" value="$(arg sim)"/>
 		<param name="jaco_dof" value="6dof"/>
 	</node>
 
 	<node if="$(optenv MOVO_HAS_KINOVA_ARM_7DOF false)" name="demo" pkg="movo_project" type="inplace_pick_place_demo.py" output="screen">
     	<rosparam command="load" file="$(find movo_7dof_moveit_config)/config/kinematics.yaml"/>
-    	<param name="table_height" value="0.74"/>
+    	<param name="table_height" value="0.75"/>
 		<param name="sim" value="$(arg sim)"/>
 		<param name="jaco_dof" value="7dof"/>
 	</node>
+
+  <!-- Bring up the joystick for control -->
+  <node pkg="si_utils" type="timed_roslaunch"
+      args="7 movo_remote_teleop movo_remote_teleop.launch"
+      name="joy_bringup" output="screen"/>
+
+  <!-- Bring up the Rviz -->
+  <node pkg="si_utils" type="timed_roslaunch"
+      args="10 movo_viz view_robot.launch function:=demo"
+      name="viz_bringup" output="screen"/>
 
 </launch>
