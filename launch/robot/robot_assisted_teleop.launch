@@ -2,12 +2,12 @@
         
     <!-- Tuck the robot -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="1 movo_demos tuck_robot.launch local:=false"
+        args="1 movo_project tuck_robot.launch local:=false"
         name="tuck_robot" output="screen"/>
         
     <!-- Bring up mapping -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="10 movo_demos assisted_teleop.launch local:=false"
+        args="10 movo_project assisted_teleop.launch local:=false"
         name="mapping_bringup" output="screen"/> 
     
     <!-- Bring up rviz -->

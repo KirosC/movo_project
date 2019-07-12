@@ -27,7 +27,7 @@
         
     <!-- Bring up navigation -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="35 movo_demos map_nav.launch sim:=true map_file:=test_zone"
+        args="35 movo_project map_nav.launch sim:=true map_file:=test_zone"
         name="mapping_bringup" output="screen"/> 
         
     <!-- Bring up the demo -->

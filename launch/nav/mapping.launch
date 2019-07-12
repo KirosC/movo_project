@@ -9,12 +9,12 @@
                  env-loader="/home/movo/env.sh" default="true" unless="$(arg local)"/>
     
     <!--- Run Assisted Teleop -->
-    <include file="$(find movo_demos)/launch/assisted_teleop.launch" if="$(arg assisted_teleop)" />
-    <include file="$(find movo_demos)/launch/sensor_nav.launch" if="$(arg sensor_nav)" />
+    <include file="$(find movo_project)/launch/assisted_teleop.launch" if="$(arg assisted_teleop)" />
+    <include file="$(find movo_project)/launch/sensor_nav.launch" if="$(arg sensor_nav)" />
        
     <!--- Run gmapping -->
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
-        <rosparam command="load" file="$(find movo_demos)/config/mapping/gmapping.yaml"/>
+        <rosparam command="load" file="$(find movo_project)/config/mapping/gmapping.yaml"/>
         <remap from="scan" to="/movo/base_scan_filtered" />
     </node>
 

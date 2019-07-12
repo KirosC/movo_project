@@ -26,7 +26,7 @@
         
     <!-- Bring up mapping -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="35 movo_demos sensor_nav.launch sim:=true"
+        args="35 movo_project sensor_nav.launch sim:=true"
         name="mapping_bringup" output="screen"/> 
     
     <!-- Bring up rviz -->

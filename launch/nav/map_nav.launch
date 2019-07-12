@@ -10,7 +10,7 @@
                  env-loader="/home/movo/env.sh" default="true" unless="$(arg local)"/>
 
     <!-- Run the map server -->
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find movo_demos)/maps/$(arg map_file).yaml" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find movo_project)/maps/$(arg map_file).yaml" />
 
     <!-- Run movo_move_base action client for tracking status -->
     <node pkg="movo_ros" name="movo_move_base" type="movo_move_base" output="screen" clear_params="true"> 
@@ -23,12 +23,12 @@
        
     <!--- Run amcl -->
     <node pkg="amcl" type="amcl" name="amcl" output="screen" clear_params="true">
-        <rosparam command="load" file="$(find movo_demos)/config/2d_nav/amcl.yaml"/>
+        <rosparam command="load" file="$(find movo_project)/config/2d_nav/amcl.yaml"/>
         <remap from="scan" to="/movo/base_scan_filtered" />
     </node>
 
     <!--- Run Move Base -->
-    <include file="$(find movo_demos)/launch/nav/move_base.launch">
+    <include file="$(find movo_project)/launch/nav/move_base.launch">
         <arg name="no_static_map" value="false"/>
         <arg name="local" value="$(arg local)"/>
     </include>

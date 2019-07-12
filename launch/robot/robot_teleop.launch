@@ -2,7 +2,7 @@
  	
       <!-- Tuck the robot -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="1 movo_demos tuck_robot.launch local:=false"
+        args="1 movo_project tuck_robot.launch local:=false"
         name="tuck_robot" output="screen"/>
         
     <!-- Bring up the joystick for control -->

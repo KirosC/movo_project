@@ -3,7 +3,7 @@
  
      <!-- Tuck the robot -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="1 movo_demos tuck_robot.launch local:=false"
+        args="1 movo_project tuck_robot.launch local:=false"
         name="tuck_robot" output="screen"/>
         
     <!-- Bring up the joystick for control -->
@@ -13,7 +13,7 @@
 
     <!-- Bring up the demo -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="10 movo_demos map_nav.launch sim:=false local:=false map_file:=$(arg map_file)"
+        args="10 movo_project map_nav.launch sim:=false local:=false map_file:=$(arg map_file)"
         name="nav_bringup" output="screen"/>
         
     <!-- Bring up the rviz GUI -->

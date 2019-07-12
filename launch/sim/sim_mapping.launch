@@ -26,7 +26,7 @@
         
     <!-- Bring up mapping -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="35 movo_demos mapping.launch sim:=true"
+        args="35 movo_project mapping.launch sim:=true"
         name="mapping_bringup" output="screen"/> 
     
     <!-- Bring up rviz -->
