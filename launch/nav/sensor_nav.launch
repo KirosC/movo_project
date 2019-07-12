@@ -18,7 +18,7 @@
     </node>
      
     <!--- Run Move Base -->
-    <include file="$(find movo_demos)/launch/nav/move_base.launch">
+    <include file="$(find movo_project)/launch/nav/move_base.launch">
         <arg name="no_static_map" value="true"/>
         <arg name="local" value="$(arg local)"/>
     </include>

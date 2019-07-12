@@ -39,7 +39,7 @@ loop_time = 5*60  # second
 
 
 while not rospy.is_shutdown():
-    child = subprocess.Popen(["roslaunch", "movo_demos", "demo_show_basic.launch"])
+    child = subprocess.Popen(["roslaunch", "movo_project", "demo_show_basic.launch"])
     rospy.sleep(loop_time+126)
     child.kill()
 

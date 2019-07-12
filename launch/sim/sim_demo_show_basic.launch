@@ -27,7 +27,7 @@
 
     <!-- Bring up the demo -->
     <node pkg="si_utils" type="timed_roslaunch"
-        args="35 movo_demos demo_show_basic.launch sim:=true local:=true"
+        args="35 movo_project demo_show_basic.launch sim:=true local:=true"
         name="demo_bringup" output="screen"/>
         
     <!-- Bring up the demo -->

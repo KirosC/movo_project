@@ -16,9 +16,9 @@
         <param name="translational_collision_speed" value="0.0"/>
         <param name="rotational_collision_speed" value="1.0" />
         
-        <rosparam file="$(find movo_demos)/config/assisted_teleop/base_planner_params.yaml" command="load"/>
-        <rosparam file="$(find movo_demos)/config/assisted_teleop/costmap_common_params.yaml" command="load" ns="local_costmap" />
-        <rosparam file="$(find movo_demos)/config/assisted_teleop/costmap_local.yaml" command="load"/>
+        <rosparam file="$(find movo_project)/config/assisted_teleop/base_planner_params.yaml" command="load"/>
+        <rosparam file="$(find movo_project)/config/assisted_teleop/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find movo_project)/config/assisted_teleop/costmap_local.yaml" command="load"/>
         <remap from="teleop_cmd_vel" to="/movo/teleop/cmd_vel" />
         <remap from="cmd_vel" to="/movo/assisted_teleop/cmd_vel" />
     </node>
