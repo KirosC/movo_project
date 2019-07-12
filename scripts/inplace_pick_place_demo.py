@@ -55,6 +55,7 @@ from shape_msgs.msg import SolidPrimitive as sp
 from geometry_msgs.msg import Pose2D, PoseStamped
 from moveit_msgs.msg import PlaceLocation, MoveItErrorCodes
 from std_msgs.msg import Bool
+from std_srvs.srv import Empty
 
 
 # Point the head using controller
@@ -393,6 +394,27 @@ def convert_dict_to_pose2d(loc):
     return tmp
 
 
+def goto_origin(req):
+    rospy.loginfo("Moving to origin...")
+    target = Pose2D(x=0.0, y=0.0, theta=0.0)
+    move_base.goto(target)
+    rospy.loginfo("Moving is complete...")
+
+
+def tuck(req):
+    rospy.loginfo("Transforming to tuck position")
+    grasping_client.close_gripper()
+    grasping_client.goto_tuck()
+    rospy.loginfo("Transforming is complete...")
+
+
+def grasp_pos(req):
+    rospy.loginfo("Transforming to grasping position")
+    grasping_client.goto_plan_grasp()
+    grasping_client.open_gripper()
+    rospy.loginfo("Transforming is complete...")
+
+
 if __name__ == "__main__":
 
     # Create a node
@@ -413,6 +435,11 @@ if __name__ == "__main__":
     head_action = PointHeadClient()
     grasping_client = GraspingClient(sim=is_sim)
     grasping_client.clearScene()
+
+    # Setup utils service server
+    rospy.Service('util_goto_origin', Empty, goto_origin)
+    rospy.Service('util_tuck', Empty, tuck)
+    rospy.Service('util_grasp_pos', Empty, grasp_pos)
 
     # set the robot pos to the planning pose
     grasping_client.goto_tuck()
