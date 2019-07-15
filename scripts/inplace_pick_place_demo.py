@@ -414,7 +414,7 @@ if __name__ == "__main__":
     grasping_client.open_gripper()
 
     # 1.2 is the straight distance between the robot and object
-    head_action.look_at(2.0, 0, table_height + .1, "base_link")
+    head_action.look_at(2.0, 0.0, table_height + .1, "base_link")
 
     while not rospy.is_shutdown():
         coords = grasping_client.getPickCoordinates()
