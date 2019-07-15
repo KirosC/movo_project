@@ -460,17 +460,24 @@ if __name__ == "__main__":
 
         # Scanning for the pringles on the table
         grasping_client.updateScene(0)
-        pringlesRight, graspsRight = grasping_client.getGraspablePringles(place=True)
-        if pringlesRight == None:
+        pringles_right, graspsRight = grasping_client.getGraspablePringles(place=True)
+        if pringles_right == None:
             rospy.logwarn("Perception failed.")
             continue
 
         rospy.loginfo("Placing object...")
         pose = PoseStamped()
-        pose.pose = pringlesRight.primitive_poses[0]
+        pose.pose = pringles_right.primitive_poses[0]
         # Place above another pringles, pringles height approx. = 0.27
-        pose.pose.position.z += 0.25
-        pose.header.frame_id = pringlesRight.header.frame_id
+        if pringles_right.primitives[0].type == sp.CYLINDER:
+            pringles_height = pringles_right.primitives[0].dimensions[sp.CYLINDER_HEIGHT]
+        else:
+            pringles_height = pringles_right.primitives[0].dimensions[sp.BOX_Z]
+        rospy.logwarn('Pringle height: {}'.format(pringles_height))
+        pose.pose.position.z += pringles_height + 0.01
+        # Fine tune for pringles position
+        pose.pose.position.x -= 0.05
+        pose.header.frame_id = pringles_right.header.frame_id
 
         bestGrasp = graspsRight[0]
         for grasp in graspsRight:
