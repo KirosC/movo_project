@@ -175,6 +175,8 @@ class GraspingClient(object):
 
         # insert objects to scene
         idx = -1
+        if find_result.objects is None:
+            return
         for obj in find_result.objects:
             if obj.object.primitive_poses[0].position.z < 0.5 or obj.object.primitive_poses[0].position.x > 2.0 or \
                     obj.object.primitive_poses[0].position.y > 0.5:
