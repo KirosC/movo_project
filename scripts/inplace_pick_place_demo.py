@@ -286,7 +286,7 @@ class GraspingClient(object):
         loc.post_place_posture = grasps.pre_grasp_posture
         loc.pre_place_approach = grasps.pre_grasp_approach
         loc.post_place_retreat = grasps.post_grasp_retreat
-        places.append(copy.deepcopy(l))
+        places.append(copy.deepcopy(loc))
         # create another several places, rotate each by 360/m degrees in yaw direction
         m = 16  # number of possible place poses
         pi = 3.141592653589
