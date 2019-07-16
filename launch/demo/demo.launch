@@ -38,11 +38,6 @@
 		<param name="jaco_dof" value="7dof"/>
 	</node>
 
-  <!-- Bring up the joystick for control -->
-  <node pkg="si_utils" type="timed_roslaunch"
-      args="7 movo_remote_teleop movo_remote_teleop.launch"
-      name="joy_bringup" output="screen"/>
-
   <!-- Bring up the Rviz -->
   <node pkg="si_utils" type="timed_roslaunch"
       args="10 movo_viz view_robot.launch function:=demo"
