@@ -157,6 +157,7 @@ class GraspingClient(object):
 
         # Coordinate for grasping
         coords = Pose2D(x=(front_edge - self.tableDist), y=center_objects, theta=0.0)
+        rospy.logwarn('New distance: {}'.format(1.6 - coords.x))
 
         return coords
 
@@ -175,7 +176,7 @@ class GraspingClient(object):
 
         # insert objects to scene
         idx = -1
-        if find_result.objects is None:
+        if find_result is None:
             return
         for obj in find_result.objects:
             if obj.object.primitive_poses[0].position.z < 0.5 or obj.object.primitive_poses[0].position.x > 2.0 or \
@@ -392,6 +393,7 @@ if __name__ == "__main__":
     Get all the demo locations from the parameter file defined by the user
     """
     table_height = rospy.get_param("~table_height", 0.75)
+    table_distance = 1.6
 
     is_sim = rospy.get_param("~sim", False)
 
@@ -416,7 +418,7 @@ if __name__ == "__main__":
     grasping_client.open_gripper()
 
     # 1.2 is the straight distance between the robot and object
-    head_action.look_at(2.0, 0.0, table_height + .1, "base_link")
+    head_action.look_at(table_distance, 0.0, table_height + .1, "base_link")
 
     while not rospy.is_shutdown():
         coords = grasping_client.getPickCoordinates()
@@ -429,8 +431,12 @@ if __name__ == "__main__":
     rospy.logwarn('Coords: \n{}'.format(coords))
     move_base.goto(coords)
 
+    # Update table distance
+    table_distance -= coords.x
+
     # Point the head at the stuff we want to pick
-    head_action.look_at(0.9, 0.0, table_height + .1, "base_link")
+    head_action.look_at(table_distance, 0.0, table_height + .1, "base_link")
+
     while not rospy.is_shutdown():
         rospy.loginfo("Picking object...")
         # Update scene for specific arm
@@ -439,7 +445,6 @@ if __name__ == "__main__":
         if pringles == None:
             rospy.logwarn("Perception failed.")
             continue
-
         # Pick the pringles
         if grasping_client.pick(pringles, grasps, 0):
             break
@@ -449,7 +454,7 @@ if __name__ == "__main__":
     grasping_client.goto_plan_grasp()
 
     # Point the head at the stuff we want to pick
-    head_action.look_at(0.9, 0.0, table_height + .1, "base_link")
+    head_action.look_at(table_distance, 0.0, table_height + .1, "base_link")
 
     # Place the block
     while not rospy.is_shutdown():
