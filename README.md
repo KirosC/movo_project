@@ -1,8 +1,8 @@
-# Kinova Movo Simple Pick and Place
+# Kinova Movo Pick and Place
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
 ## Introduction
-This is a simple project using [Kinova Movo](https://www.kinovarobotics.com/en/products/mobile-manipulators) to execute a simple pick and place (or stack) action.
+This is a project using [Kinova Movo](https://www.kinovarobotics.com/en/products/mobile-manipulators) to execute a pick and place (or stack) action.
 
 [Demo Video](https://vimeo.com/348968986)
 
